@@ -54,9 +54,15 @@ def main():
     car_stats = pd.merge(car_stats, turbo, how='outer', left_index=True, right_index=True)
     car_stats.fillna(0, inplace=True)
 
+    # add columns for probabilities
+    car_stats['prob std'] = car_stats['std'] / car_stats['total'] * 100
+    car_stats['prob turbo'] = car_stats['turbo'] / car_stats['total'] * 100
 
-    car_stats.sort_index(inplace=True)
-    print(car_stats)
+    # format and print probabilities
+    for label, row in car_stats.iterrows():
+        print('Prob(aspiration=std|make=', label, ') = ', '{:.2f}'.format(row['prob std']), '%')
+        print('Prob(aspiration=turbo|make=', label, ') = ', '{:.2f}'.format(row['prob turbo']), '%')
+
     return
 
 
