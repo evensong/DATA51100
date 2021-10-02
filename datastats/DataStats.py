@@ -2,8 +2,16 @@
 # Data51100 Fall 2021
 # Programming Assignment #5
 
+import numpy as np
 import pandas as pd
-from pandas import DataFrame
+import re
+
+
+def get_start_time(x):
+    if pd.isna(x):
+        return 0
+    else:
+        return int(re.findall(r'[1-9]', x)[0])
 
 
 # pulls public school information, selects columns and computes summary stats
@@ -23,19 +31,38 @@ def main():
     grades = schools['Grades_Offered_All']
 
     # here we get the lowest grades by taking the first element in all grades
-    min_grade = 'Lowest Grade Offered'
-    school_stats[min_grade] = [x[0] for x in grades]
-    school_stats[min_grade] = school_stats[min_grade].str.replace('P', 'PK')
+    lowest = 'Lowest Grade'
+    min_grades = pd.Series([x.split(',')[0] for x in grades])
+    school_stats[lowest] = min_grades
 
     # get highest grade by taking the last element of each list in all grades
-    school_stats['Highest Grade Offered'] = [x[len(x) - 1] for x in grades]
+    max_grades = pd.Series([x.split(',')[-1] for x in grades])
+    school_stats['Highest Grade'] = max_grades
 
-    # parse times to get starting and ending hours
+    # parse times to get starting hours
     hours = schools['School_Hours']
-    hours = hours.str.split('-', expand=True)
-    hours = hours.drop(list(range(2, 5)), axis=1)
+    get_start_times = np.vectorize(get_start_time, otypes=[np.int64])
+    school_stats['School_Start_Hour'] = get_start_times(hours)
 
+    # Aggregate high school and non highschool data
+    college = schools.loc[schools['Is_GoCPS_High_School']]['College_Enrollment_Rate_School']
+    nhs_students = schools.loc[~schools['Is_GoCPS_High_School']]['Student_Count_Total']
+
+    # Calculate means and stds
+    mean_college = college.mean(skipna=True)
+    std_college = college.std(skipna=True)
+    mean_nhs = nhs_students.mean(skipna=True)
+    std_nhs = nhs_students.std(skipna=True)
+
+    # Aggregate start times and count
+    start_times =
+    # Print data and stats, not required to exactly match example output
     print(school_stats.head(10))
+    print('\nCollege Enrollment Rate for High Schools = ',
+          '{0:.2f}'.format(mean_college), ' (std = ', '{0:.2f}'.format(std_college), ')')
+
+    print('\nTota Student Count for non-High Schools = ',
+          '{0:.2f}'.format(mean_nhs), ' (std = ', '{0:.2f}'.format(std_nhs), ')')
     return
 
 
