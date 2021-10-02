@@ -25,7 +25,7 @@ def main():
     # create trimmed dataframe for output--our working frame
     cols = ['School_ID', 'Short_Name', 'Is_High_School', 'Zip',
             'Student_Count_Total', 'College_Enrollment_Rate_School']
-    school_stats = schools[cols]
+    school_stats = schools[cols].copy()
 
     # isolate data about grades to populate lowest and highes grade col
     grades = schools['Grades_Offered_All']
@@ -57,6 +57,11 @@ def main():
     # Aggregate start times and count
     start_dist = school_stats['School_Start_Hour'].value_counts()
 
+    # mask schools not in the loop and count
+    zip = school_stats['Zip']
+    mask = ((zip != 60601) & (zip != 60602) & (zip != 60603) & (zip != 60604) &
+            (zip != 60605) & (zip != 60606) & (zip != 60607) & (zip != 60616))
+    out_of_loop = zip[mask].count()
     # Print data and stats, not required to exactly match example output
     print(school_stats.head(10))
     print('\nCollege Enrollment Rate for High Schools = ',
@@ -66,6 +71,8 @@ def main():
           '{0:.2f}'.format(mean_nhs), ' (std = ', '{0:.2f}'.format(std_nhs), ')\n')
     print('Distribution of Starting Hours:\n\n8am: ',
           start_dist[8], '\n7am: ', start_dist[7], '\n9am: ', start_dist[9])
+
+    print('\nNumber of schools outside loop: ', out_of_loop)
     return
 
 
