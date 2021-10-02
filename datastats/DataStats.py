@@ -55,14 +55,17 @@ def main():
     std_nhs = nhs_students.std(skipna=True)
 
     # Aggregate start times and count
-    start_times =
+    start_dist = school_stats['School_Start_Hour'].value_counts()
+
     # Print data and stats, not required to exactly match example output
     print(school_stats.head(10))
     print('\nCollege Enrollment Rate for High Schools = ',
           '{0:.2f}'.format(mean_college), ' (std = ', '{0:.2f}'.format(std_college), ')')
 
     print('\nTota Student Count for non-High Schools = ',
-          '{0:.2f}'.format(mean_nhs), ' (std = ', '{0:.2f}'.format(std_nhs), ')')
+          '{0:.2f}'.format(mean_nhs), ' (std = ', '{0:.2f}'.format(std_nhs), ')\n')
+    print('Distribution of Starting Hours:\n\n8am: ',
+          start_dist[8], '\n7am: ', start_dist[7], '\n9am: ', start_dist[9])
     return
 
 
