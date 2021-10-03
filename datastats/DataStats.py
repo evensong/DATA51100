@@ -45,8 +45,8 @@ def main():
     school_stats['School_Start_Hour'] = get_start_times(hours)
 
     # Aggregate high school and non highschool data
-    college = schools.loc[schools['Is_GoCPS_High_School']]['College_Enrollment_Rate_School']
-    nhs_students = schools.loc[~schools['Is_GoCPS_High_School']]['Student_Count_Total']
+    college = schools.loc[schools['Is_High_School']]['College_Enrollment_Rate_School']
+    nhs_students = schools.loc[~schools['Is_High_School']]['Student_Count_Total']
 
     # Calculate means and stds
     mean_college = college.mean(skipna=True)
@@ -63,13 +63,13 @@ def main():
             (zip != 60605) & (zip != 60606) & (zip != 60607) & (zip != 60616))
     out_of_loop = zip[mask].count()
     # Print data and stats, not required to exactly match example output
-    print(school_stats.head(10))
+    print(school_stats.head(10), '\n')
     print('\nCollege Enrollment Rate for High Schools = ',
           '{0:.2f}'.format(mean_college), ' (std = ', '{0:.2f}'.format(std_college), ')')
 
     print('\nTota Student Count for non-High Schools = ',
           '{0:.2f}'.format(mean_nhs), ' (std = ', '{0:.2f}'.format(std_nhs), ')\n')
-    print('Distribution of Starting Hours:\n\n8am: ',
+    print('Distribution of Starting Hours:\n8am: ',
           start_dist[8], '\n7am: ', start_dist[7], '\n9am: ', start_dist[9])
 
     print('\nNumber of schools outside loop: ', out_of_loop)
