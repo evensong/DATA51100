@@ -58,10 +58,19 @@ def main():
     car_stats['prob std'] = car_stats['std'] / car_stats['total'] * 100
     car_stats['prob turbo'] = car_stats['turbo'] / car_stats['total'] * 100
 
-    # format and print probabilities
+    # format and print probabilities for aspiration vs model
     for label, row in car_stats.iterrows():
         print('Prob(aspiration=std|make=', label, ') = ', '{:.2f}'.format(row['prob std']), '%')
         print('Prob(aspiration=turbo|make=', label, ') = ', '{:.2f}'.format(row['prob turbo']), '%')
+
+    # Get value counts for make and total of all make, then calculate probabilities for each make
+    total = car_data['make'].value_counts(sort=False).sum()
+    car_stats['prob make'] = car_data['make'].value_counts(sort=False) / total * 100
+
+    # Print make probabilities
+    print('\n')
+    for index, prob in car_stats['prob make'].items():
+        print('Prob(make = ', index, ') = ', '{:.2f}'.format(prob), '%')
 
     return
 
